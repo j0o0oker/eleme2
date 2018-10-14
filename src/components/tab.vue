@@ -27,11 +27,14 @@
 		color: #FF0000;
 	}
 	.tab-container{
+		position: fixed;
+		left: 0;
+		top: 25%;
 		display: flex;
 		
 		width: 100%;
 		height: 7%;
-		background-color: antiquewhite;
+		background-color: #fff;
 		cursor: pointer;
 		
 	}
@@ -41,8 +44,8 @@
 		align-items: center;
 		justify-content: center;
 		flex: 1;
-		color: yellowgreen;
-		font-size: 21px;
+		color: black;
+		font-size: 15px;
 		font-weight: 100;
 		transition:all 2s;
 	}

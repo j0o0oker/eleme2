@@ -1,6 +1,7 @@
 <template>
   <div id="app">
 			<myHeader></myHeader>
+			
 			<tab></tab>
    
 			
@@ -13,12 +14,11 @@
 
 export default {
   name: 'App',
+	data(){
+		return {}
+	},
 	components:{
 		myHeader,tab
-	},
-	created(){
-		
-	
 	}
 };
 </script>
@@ -29,6 +29,7 @@ export default {
 		padding: 0px;
 		width: 100%;
 		height: 100%;
+		list-style: none;
 	}
 	a{
 		text-decoration: none;

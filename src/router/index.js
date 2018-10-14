@@ -7,11 +7,13 @@ import ratings from '../components/content/ratings.vue';
 Vue.use(Router)
 
 export default new Router({
-		routes: [
+		routes: [{
+								path:'/' ,
+							  redirect:'/goods',
+							},
 							{
 								path:'/goods' ,
-								// ????
-								// redirect:'/goods',
+								
 								component: goods
 							},
 							{
