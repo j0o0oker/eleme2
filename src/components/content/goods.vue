@@ -17,12 +17,12 @@
 					<li v-for="item in goods" class="food-list" ref="fhook">
 						<h1 class="tittle">{{item.name}}</h1>
 						<ul>
-							<li class="food-item" v-for="food in item.foods">
+							<li class="food-item" v-for="(food,index) in item.foods">
 								<div class="icon">
 									<img width="87" height="87" :src="food.icon" alt="">
 								</div>
 								<div class="content">
-									<h2 class="name">{{food.name}}</h2>
+									<h2 class="name">{{(food,index).name}}</h2>
 									<p class="description">{{food.description}}</p>
 								
 									<div class="extra">
@@ -33,6 +33,7 @@
 										<span class="now">${{food.price}}</span>
 										<span class="old" v-show="food.oldPrice">${{food.oldPrice}}</span>
 									</div>
+									<cartCtrl @want="addNum"></cartCtrl>
 								</div>
 							</li>
 						</ul>
@@ -40,21 +41,32 @@
 				</ul>
 			</div>
 		</div>
-		<shopcart>
+		<shopcart :delivery-price="seller.deliveryPrice"
+				  :min-price="seller.minPrice"
+				  :select-foods="finalPrice"
+				  :num="num">
 		</shopcart>
 	</div>
 </template>
 <script>
 	import BScroll from 'better-scroll';
-	import shopcart from './shopcart.vue'
+	import shopcart from './shopcart.vue';
+	import cartCtrl from './cartCtrl.vue';
+
 	export default{
 		data(){
 			return {
 				goods:[],
+				seller:[],
 				height:0,
 				listHeight:[0],
-				scrollY:0
-				}
+				scrollY:0,
+				finalPrice:[
+					
+				],
+				num:0
+			}
+				
 		},
 		mounted(){
 		},
@@ -68,6 +80,18 @@
 					this._initScroll();
 					this.culScroll();
 				});
+			},res => {
+				alert('err');
+			}),
+			this.$http({
+				methos:'get',
+				url:'api/seller'
+				
+			}).then(res => {
+				
+				this.seller = res.data.data;
+				
+				
 			},res => {
 				alert('err');
 			})
@@ -84,7 +108,6 @@
 			},
 			culScroll() {
 				let foodList = this.$refs.fhook;
-				
 				let height = 0;
 				for(let i = 0;i<foodList.length;i++){
 					height += foodList[i].clientHeight;
@@ -92,9 +115,31 @@
 				}
 			},
 			selectMenu(index) {
-				console.log(index);
+				
 				let temp = this.$refs.fhook[index];
 				this.foodScroll.scrollToElement(temp,1000);
+			},
+			add(index) {
+				
+				 this.num +=1;
+				 this.finalPrice.push({
+					 price:this.goods[0].foods[index].price,
+					 count:1
+					 })
+			},
+			reduce() {
+				this.num = val;
+				this.finalPrice.push({
+					price:this.goods[0].foods[1].price,
+					count:this.num
+					})
+			},
+			addNum(val) {
+				this.num =val;
+				this.finalPrice.push({
+					price:this.goods[0].foods[1].price,
+					count:this.num
+					})
 			}
 		},
 		computed:{
@@ -110,7 +155,7 @@
 			}
 		},
 		components:{
-			shopcart
+			shopcart,cartCtrl
 		}
 	}
 </script>
@@ -248,6 +293,7 @@
 		font-size: 10px;
 		color: rgb(147,153,159);
 	}
+	
 	
 	
 
