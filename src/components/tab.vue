@@ -3,8 +3,8 @@
 		
 		<router-view></router-view>
 		<router-link class="tab router-link-active" to="goods">商品</router-link>
-		<router-link class="tab" to="seller">评论</router-link>
-		<router-link class="tab" to="ratings">商家</router-link>
+		<router-link class="tab" to="ratings">评论</router-link>
+		<router-link class="tab" to="seller">商家</router-link>
 	</div>
 </template>
 <script>
@@ -27,14 +27,10 @@
 		color: #FF0000;
 	}
 	.tab-container{
-		position: fixed;
-		left: 0;
-		top: 25%;
 		display: flex;
-		
 		width: 100%;
-		height: 7%;
-		background-color: #fff;
+		height: 40px;
+		background-color:#fff;
 		cursor: pointer;
 		
 	}
@@ -44,10 +40,11 @@
 		align-items: center;
 		justify-content: center;
 		flex: 1;
-		color: black;
-		font-size: 15px;
-		font-weight: 100;
+		color: rgb(77,85,93);
+		font-size: 14px;
+		font-weight: 200;
 		transition:all 2s;
+		font-size: 14px;
 	}
 	.tab-container .tab:hover{
 		color:red;

@@ -14,15 +14,15 @@
 			</div>
 			<div class="foods-wrapper" ref="fwrapper">
 				<ul ref="s">
-					<li v-for="item in goods" class="food-list" ref="fhook">
+					<li  v-for="(item,Findex) in goods" class="food-list" ref="fhook">
 						<h1 class="tittle">{{item.name}}</h1>
 						<ul>
-							<li class="food-item" v-for="(food,index) in item.foods">
+							<li class="food-item" v-for="(food,Sindex) in item.foods">
 								<div class="icon">
 									<img width="87" height="87" :src="food.icon" alt="">
 								</div>
 								<div class="content">
-									<h2 class="name">{{(food,index).name}}</h2>
+									<h2 class="name" @click="select(food)">{{food.name}}</h2>
 									<p class="description">{{food.description}}</p>
 								
 									<div class="extra">
@@ -33,7 +33,10 @@
 										<span class="now">${{food.price}}</span>
 										<span class="old" v-show="food.oldPrice">${{food.oldPrice}}</span>
 									</div>
-									<cartCtrl @want="addNum"></cartCtrl>
+									<div class="cart-wrappear">
+										<cartCtrl :food="food"></cartCtrl>
+									</div>
+									
 								</div>
 							</li>
 						</ul>
@@ -41,10 +44,12 @@
 				</ul>
 			</div>
 		</div>
+		<food :food="selectf" ref="food"></food>
 		<shopcart :delivery-price="seller.deliveryPrice"
 				  :min-price="seller.minPrice"
 				  :select-foods="finalPrice"
-				  :num="num">
+				  :num="num"
+					:selectFoods="selectFood">
 		</shopcart>
 	</div>
 </template>
@@ -52,6 +57,8 @@
 	import BScroll from 'better-scroll';
 	import shopcart from './shopcart.vue';
 	import cartCtrl from './cartCtrl.vue';
+	import food from './food.vue';
+
 
 	export default{
 		data(){
@@ -64,7 +71,12 @@
 				finalPrice:[
 					
 				],
-				num:0
+				num:0,
+				selectf:{},
+				
+				index1:0,
+				index2:0,
+				is_show:false
 			}
 				
 		},
@@ -84,7 +96,7 @@
 				alert('err');
 			}),
 			this.$http({
-				methos:'get',
+				methods:'get',
 				url:'api/seller'
 				
 			}).then(res => {
@@ -97,10 +109,17 @@
 			})
 		},
 		methods:{
+			select(food) {
+				this.selectf = food;
+				
+				this.$refs.food.show();
+			},
 			_initScroll() {
-				this.menuScroll = new BScroll(this.$refs.mwrapper,{});
+				this.menuScroll = new BScroll(this.$refs.mwrapper,{
+					probeType:3,click:true,taps:true
+				});
 				this.foodScroll = new BScroll(this.$refs.fwrapper,{
-					probeType:3
+					probeType:3,click:true,taps:true
 				});
 				this.foodScroll.on('scroll',pos => {
 					this.scrollY = Math.abs(Math.floor(pos.y));
@@ -115,31 +134,8 @@
 				}
 			},
 			selectMenu(index) {
-				
 				let temp = this.$refs.fhook[index];
 				this.foodScroll.scrollToElement(temp,1000);
-			},
-			add(index) {
-				
-				 this.num +=1;
-				 this.finalPrice.push({
-					 price:this.goods[0].foods[index].price,
-					 count:1
-					 })
-			},
-			reduce() {
-				this.num = val;
-				this.finalPrice.push({
-					price:this.goods[0].foods[1].price,
-					count:this.num
-					})
-			},
-			addNum(val) {
-				this.num =val;
-				this.finalPrice.push({
-					price:this.goods[0].foods[1].price,
-					count:this.num
-					})
 			}
 		},
 		computed:{
@@ -152,19 +148,30 @@
 					}
 				}
 				return 0;
+			},
+			selectFood() {
+				let foods = [];
+				this.goods.forEach((good) => {
+					good.foods.forEach((food) => {
+						if(food.count>0){
+							foods.push(food);
+						}
+					})
+				});
+				return foods;
 			}
 		},
 		components:{
-			shopcart,cartCtrl
+			shopcart,cartCtrl,food
 		}
 	}
 </script>
 <style scoped>
 	.goods{
 		position: fixed;
-		bottom: 7%;
+		top: 169px;
 		width: 100%;
-		height: 61%;
+		height: 68%;
 	}
 	.container{
 		display: flex;
@@ -293,7 +300,19 @@
 		font-size: 10px;
 		color: rgb(147,153,159);
 	}
-	
+	.container .foods-wrapper .food-item .content .cart-wrappear{
+		position: relative;
+		right: -67px;
+		bottom: 21px;
+	}
+	.container .foods-wrapper .food-item .content .cart-wrapper{
+		width: 100px;
+		height: 30px;
+		background-color: #000000;
+		position: relative;
+		left: 50%;
+		top: 10%;
+	}
 	
 	
 

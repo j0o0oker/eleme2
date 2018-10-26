@@ -1,32 +1,44 @@
 <template>
-	
-		<div class="select">
-			<div class="reduce" @click="reduce">
-				<div class="reduceIcon">-</div>
-				<div class="text">{{num}}</div>
+		<div class="cartctrl">
+			<div class="cart-decrease" v-show="food.count>0" @click.stop.prevrnt="decrease">
+				<i class="iconfont icon-jianshao"></i>
+
 			</div>
-			<div class="add" @click="add">+</div>
+			<div class="cart-count" v-show="food.count>0">{{food.count}}</div>
+			<div class="cart-add" @click.stop.prevrnt="add">
+				<i class="iconfont icon-htmal5icon18"></i>
+			</div>
 		</div>
 	
 </template>
 <script>
+	import Vue from 'vue';
 	export default{
+		props:{
+			food:{
+				type:Object
+			}
+		},
+		created() {
+			
+			
+		},
 		data(){
 			return {
 				num:0
 			}
 		},
-		created(){
-			
-		},
 		methods:{
 			add() {
-				this.num +=1;
-				this.$emit("want",this.num);
+				if(!this.food.count){
+					Vue.set(this.food,'count',1);
+				}else{
+					this.food.count++;
+					console.log(this.food.count);
+				}
 			},
-			reduce() {
-				this.num -=1;
-				this.$emit("want",this.num);
+			decrease() {
+				this.food.count--;
 			}
 		},
 		computed:{
@@ -36,45 +48,38 @@
 	}
 </script>
 <style scoped>
-	.select{
-		display: flex;
-		position: relative;
-		top: -23px;
-		left:40%;
-		background-color: ;
-		width: 60%;
-		height: 25px;
+	.cartctrl {
+		height: 24px;
+		width: 103px;
 	}
-	.select .reduce{
-		flex:1;
+	i {
+		
+		font-size: 22px;
+		text-align: center;
+		line-height: 24px;
+		color: rgb(1,100,225);
+
+
+	}
+	.cartctrl .cart-decrease {
+		display: inline-block;
+		vertical-align: middle;
 		
 	}
-	.select .reduce .reduceIcon{
-		width: 30px;
-		height: 30px;
-		border-radius: 50%;
-		background-color: #FF6A6A;
-		color: #fff;
-		font-size: 28px;
-		line-height: 23px;
+	.cartctrl .cart-count{
+		display: inline-block;
+		width: 49px;
+		font-size: 10px;
+		color: rgb(147,153,159);
 		text-align: center;
+		line-height: 24px;
+
 	}
-	.select .reduce .text{
-		position: relative;
-		top: -107%;
-		left:24%;
-		text-align: center;
-	}
-	.select .add{
-		flex: 0 0 30px;
-		width: 30px;
-		height: 30px;
-		border-radius: 50%;
-		color: #fff;
-		font-size: 28px;
-		line-height: 23px;
-		text-align: center;
-		background-color: #2a7dcf;
+	.cartctrl .cart-add {
 		
+		display: inline-block;
+		vertical-align: middle;
+
 	}
+	
 </style>
